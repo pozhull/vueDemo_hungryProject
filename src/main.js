@@ -1,11 +1,13 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import VueResource from 'vue-resource';
 import App from './App';
 import goods from './components/goods/goods.vue';
 import ratings from './components/ratings/rating.vue';
 import seller from './components/seller/seller.vue';
 
 Vue.use(VueRouter);
+Vue.use(VueResource);
 
 /* eslint-disable no-new */
 let app = Vue.extend(App);
