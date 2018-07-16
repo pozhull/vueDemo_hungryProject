@@ -17,6 +17,10 @@
 					<span class="text">{{seller.supports[0].description}}</span>
 				</div>
 			</div>
+			<div v-if="seller.supports" class="support-count" @click="showDetail">
+				<span class="count">{{seller.supports.length}}个</span>
+				<i class="icon-keyboard_arrow_right"></i>
+			</div>
 		</div>
 		<div class="bulletin-wrapper" @click="showDetail">
 		  	<span class="bulletin-title"></span><span class="bulletin-text">{{seller.bulletin}}</span>
@@ -29,6 +33,28 @@
 		  <div class="detail-wrapper clearfix">
 		    <div class="detail-main">
 		      	<h1 class="name">{{seller.name}}</h1>
+		      	<div class="star-wrapper">
+			      	<star :size="48" :score="seller.score"></star>
+		      	</div>
+		      	<div class="title">
+		      		<div class="line"></div>
+		      		<div class="text">优惠信息</div>
+		      		<div class="line"></div>
+		      	</div>
+		      	<div class="supports" v-if="seller.supports">
+		      		<li class="support-item" v-for="item in seller.supports">
+		      			<span class="icon" :class="classMap[seller.supports[$index].type]"></span>
+		      			<span class="text">{{seller.supports[$index].description}}</span>
+		      		</li>
+		      	</div>
+		      	<div class="title">
+		      		<div class="line"></div>
+		      		<div class="text">商家公告</div>
+		      		<div class="line"></div>
+		      	</div>
+		      	<div class="bulletin">
+		      		<div class="content">{{seller.bulletin}}</div>
+		      	</div>
 		    </div>
 		  </div>
 		  <div class="detail-close" @click="hideDetail">
@@ -39,6 +65,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+	import star from 'components/star/star.vue';
+
 	export default {
 		props: {
 			seller: {
@@ -60,6 +88,9 @@
 		},
 		created() {
 			this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
+		},
+		components: {
+			star
 		}
 	};
 </script>
@@ -72,6 +103,7 @@
 		position: relative
 		overflow: hidden
 		.content-warpper
+			position: relative
 			padding: 24px 12px 18px 24px
 			font-size: 0
 			.avatar
@@ -95,6 +127,23 @@
 						font-size: 16px
 						line-height: 18px
 						font-weight: bold
+			.support-count
+				position: absolute
+				right: 12px
+				bottom: 14px
+				padding: 0 8px
+				height: 24px
+				line-height: 24px
+				border-radius: 14px
+				background: rgba(0, 0, 0, 0.2)
+				text-align: center
+				.count
+					vertical-align: top
+					font-size: 10px
+				.icon-keyboard_arrow_right
+					margin-left: 2px
+					line-height: 24px
+					font-size: 10px
 		.bulletin-wrapper
 			position: relative
 			height: 28px
@@ -175,7 +224,6 @@
 							padding: 0 12px
 							font-weight: 700
 							font-size: 14px
-
 					.supports
 						width: 80%
 						margin: 0 auto
