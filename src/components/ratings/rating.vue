@@ -1,6 +1,13 @@
 <template>
 	<div>
-		I am ratings
+		<div class="ratings">
+			<div class="ratings-content">
+				<div class="overview">
+					<div class="overview-left"></div>
+					<div class="overview-right"></div>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -9,5 +16,9 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-	
+	.ratings
+		position: absolute
+		top: 174px
+		bottom: 0
+		width: 100%
 </style>

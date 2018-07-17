@@ -10,7 +10,7 @@
 				</li>
 			</ul>
 		</div>
-		<div class="foods-wrapper"  v-el:foods-wrapper>
+		<div class="foods-wrapper" v-el:foods-wrapper>
 			<ul>
 				<li v-for="item in goods" class="food-list food-list-hook">
 					<h1 class="title">{{item.name}}</h1>
@@ -29,17 +29,23 @@
 									<span class="now">￥{{food.price}}</span>
 									<span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
 								</div>
+								<div class="cartcontrol-wrapper">
+									<cartcontrol :food="food"></cartcontrol>
+								</div>
 							</div>
 						</li>
 					</ul>
 				</li>
 			</ul>
 		</div>
+		<shopcart v-ref:shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
 	</div>
 </template>
 
 <script type="text/ecmascript-6">
 	import BScroll from 'better-scroll';
+	import shopcart from 'components/shopcart/shopcart.vue';
+	import cartcontrol from 'components/cartcontrol/cartcontrol.vue';
 
 	const ERR_OK = 0;
 
@@ -66,6 +72,17 @@
 					}
 				}
 				return 0;
+			},
+			selectFoods() {
+				let foods = [];
+				this.goods.forEach((good) => {
+					good.foods.forEach((food) => {
+						if (food.count) {
+							foods.push(food);
+						}
+					});
+				});
+				return foods;
 			}
 		},
 		created() {
@@ -91,11 +108,18 @@
 				let el = foodList[index];
 				this.foodsScroll.scrollToElement(el, 300);
 			},
+			_drop(target) {
+				// 体验优化, 异步执行
+				this.$nextTick(() => {
+					this.$refs.shopcart.drop(target);
+				});
+			},
 			_initScroll() {
 				this.meunScroll = new BScroll(this.$els.menuWrapper, {
 					click: true
 				});
 				this.foodsScroll = new BScroll(this.$els.foodsWrapper, {
+					click: true,
 					probeType: 3
 				});
 				this.foodsScroll.on('scroll', (pos) => {
@@ -111,6 +135,15 @@
 					height += item.clientHeight;
 					this.listHeight.push(height);
 				}
+			}
+		},
+		components: {
+			shopcart,
+			cartcontrol
+		},
+		events: {
+			'cart.add'(target) {
+				this._drop(target);
 			}
 		}
 	};
@@ -217,4 +250,8 @@
 						.old
 							text-decoration: line-through
 							font-size: 10px
+					.cartcontrol-wrapper
+						position: absolute
+						right: 0
+						bottom: 12px
 </style>
